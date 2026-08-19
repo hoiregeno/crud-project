@@ -1,4 +1,5 @@
 <?php
+  session_start();
   include './config.php';
 
   // --- ADD USER ---
@@ -7,21 +8,36 @@
     $email = $_POST['email'];
     $phone = $_POST['phone'];
     $address = $_POST['address'];
-    $err_msg = "";
+
 
     if(!empty($name) && !empty($email) && !empty($phone) && !empty($address)){
-      $query = mysqli_query($conn, "INSERT INTO users (name, email, phone, address)
-                                    VALUES ('$name', '$email', '$phone', '$address')");
-      if($query){
+      $sql = "INSERT INTO users (name, email, phone, address)
+              VALUES (?, ?, ?, ?)";
+      $stmt = mysqli_prepare($conn, $sql);
+      mysqli_stmt_bind_param($stmt, "ssss", $name, $email, $phone, $address);
+
+      try{
+        mysqli_stmt_execute($stmt);
+      
         header('Location: index.php');
         exit;
       }
-      else{
-        $err_msg = "Something went wrong.";
+      catch(mysqli_sql_exception $e){
+        if($e -> getCode() == 1062){
+          $_SESSION["err"] = "User already exists. Try again.";
+        }
+        else{
+          $_SESSION["err"] = "Failed to add user. Please try again.";
+        }
+
+        header('Location: add.php');
+        exit;
       }
     }
     else{
-      $err_msg = "Please fill in all user details.";
+      $_SESSION["err"] = "Please fill in all user details.";
+      header('Location: add.php');
+      exit;
     }
   }
 

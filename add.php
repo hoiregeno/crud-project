@@ -1,5 +1,11 @@
 <?php
+  session_start();
   include './config.php';
+  
+  if(isset($_SESSION["err"])){
+    $err_msg = $_SESSION["err"];
+    unset($_SESSION["err"]);
+  }
 ?>
 
 <!DOCTYPE html>
