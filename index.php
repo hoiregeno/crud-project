@@ -35,13 +35,13 @@
           ?>
             <tr>
                 <td><?= $num++ ?></td>
-                <td><?= $user["name"] ?></td>
-                <td><?= $user["email"] ?></td>
-                <td><?= $user["phone"] ?></td>
-                <td><?= $user["address"] ?></td>
+                <td><?= htmlspecialchars($user["name"]) ?></td>
+                <td><?= htmlspecialchars($user["email"]) ?></td>
+                <td><?= htmlspecialchars($user["phone"]) ?></td>
+                <td><?= htmlspecialchars($user["address"]) ?></td>
                 <td class="actions">
-                  <a href="edit.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-outline">Edit</a>
-                  <a href="actions.php?id=<?= $user['id']?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                  <a href="edit.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn btn-sm btn-outline">Edit</a>
+                  <a href="actions.php?id=<?= htmlspecialchars($user['id']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                 </td>
             </tr>
           <?php endwhile; ?>
