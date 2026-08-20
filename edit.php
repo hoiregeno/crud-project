@@ -1,8 +1,19 @@
 <?php
+  session_start();
   include './config.php';
+  
   $id = $_GET["id"];
-  $query = mysqli_query($conn, "SELECT * FROM users WHERE id = $id");
-  $user = mysqli_fetch_assoc($query);
+  $sql = "SELECT * FROM users WHERE id = ?";
+  $stmt = mysqli_prepare($conn, $sql);
+  mysqli_stmt_bind_param($stmt, "i", $id);
+  mysqli_stmt_execute($stmt);
+  $result = mysqli_stmt_get_result($stmt);
+  $row = mysqli_fetch_assoc($result);
+
+  if(isset($_SESSION["err"])){
+    $err_msg = $_SESSION["err"];
+    unset($_SESSION["err"]);
+  }
 ?>
 
 <!DOCTYPE html>
@@ -24,22 +35,22 @@
         <?php endif; ?>
 
         <div class="input-box">
-          <input type="text" name="name" id="name-input" placeholder=" " value="<?= $user['name'] ?>">
+          <input type="text" name="name" id="name-input" placeholder=" " value="<?= htmlspecialchars($row['name']) ?>">
           <label for="name-input">Name</label>
         </div>
 
         <div class="input-box">
-          <input type="email" name="email" id="email-input" placeholder=" " value="<?= $user['email']?>">
+          <input type="email" name="email" id="email-input" placeholder=" " value="<?= htmlspecialchars($row['email']) ?>">
           <label for="email-input">Email</label>
         </div>
 
         <div class="input-box">
-          <input type="text" name="phone" id="phone-input" placeholder=" " value="<?= $user['phone']?>">
+          <input type="text" name="phone" id="phone-input" placeholder=" " value="<?= htmlspecialchars($row['phone']) ?>">
           <label for="phone-input">Phone</label>
         </div>
 
         <div class="input-box">
-          <textarea name="address" id="address-input" placeholder=" "><?= $user['address'] ?></textarea>
+          <textarea name="address" id="address-input" placeholder=" "><?= htmlspecialchars($row['address']) ?></textarea>
           <label for="address-input">Address</label>
         </div>
 
